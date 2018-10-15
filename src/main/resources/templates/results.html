@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"><head>
+    <meta charset="UTF-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <title>Persons</title>
+
+    <style type="text/css">
+        html, body {
+            background-color: #B4B4B4;
+        }
+        </style>
+</head>
+<body>
+<div class="container" align="center">
+<table class="table">
+    <thead>
+    <tr>
+        <td><a class="pageLink" th:href="@{/results/(pageSize=${selectedPageSize}, sort=id)}">ID</a></td>
+        <td><a class="pageLink" th:href="@{/results/(pageSize=${selectedPageSize}, sort=firstName)}">Firstname</a></td>
+        <td><a class="pageLink" th:href="@{/results/(pageSize=${selectedPageSize}, sort=lastName)}">Lastname</a></td>
+        <td><a class="pageLink" th:href="@{/results/(pageSize=${selectedPageSize}, sort=email)}">Email</a></td>
+        <td><a class="pageLink" th:href="@{/results/(pageSize=${selectedPageSize}, sort=birthDay)}">Birthday</a></td>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="person : ${persons}">
+        <td th:text="${person.id}"></td>
+        <td th:text="${person.firstName}"></td>
+        <td th:text="${person.lastName}"></td>
+        <td th:text="${person.email}"></td>
+        <td th:text="${person.birthDay}"></td>
+    </tr>
+    </tbody>
+</table>
+</div>
+<div class="row" align="center">
+<div th:if="${pages.getTotalPages() != 1}" class="form-group col-md-11 pagination-centered">
+    <ul class="pagination">
+        <li th:class="${pages.getNumber() == 0} ? disabled">
+            <a class="pageLink" th:href="@{/results/(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
+        </li>
+        <li th:class="${pages.getNumber() == 0} ? disabled">
+            <a class="pageLink" th:href="@{/results/(pageSize=${selectedPageSize}, page=${pages.getNumber()})}">&larr;</a>
+        </li>
+        <li th:class="${pages.getNumber() == (page - 1)} ? 'active pointer-disabled'"
+            th:each="p : ${#numbers.sequence(1, pages.getTotalPages())}">
+            <a class="pageLink" th:href="@{/results/(pageSize=${selectedPageSize}, page=${p})}"
+               th:text="${p}"></a>
+        </li>
+        <li th:class="${pages.getNumber() + 1 == pages.getTotalPages()} ? disabled">
+            <a class="pageLink"
+               th:href="@{/results/(pageSize=${selectedPageSize}, page=${pages.getNumber() + 2})}">&rarr;</a>
+        </li>
+        <li th:class="${pages.getNumber() + 1 == pages.getTotalPages()} ? disabled">
+            <a class="pageLink"
+               th:href="@{/results/(pageSize=${selectedPageSize}, page=${pages.getTotalPages()})}">&raquo;</a>
+        </li>
+    </ul>
+</div>
+</div>
+
+<div class="container">
+    <div align="center">
+        <h3>Add new Person</h3>
+        <form th:action="@{/persons}" method="post" th:object="${person} ">
+            <p>Firstname: <input type="text" th:field="*{firstName}"/></p>
+            <p>Lastname: <input type="text" th:field="*{lastName}"/></p>
+            <p>Email: <input type="text" th:field="*{email}"/></p>
+            <p>Birthday: <input type="text" th:field="*{birthDay}"/></p>
+            <p><input type="submit" th:value="Submit"></p>
+        </form>
+    </div>
+</div>
+</body>
+</html>
